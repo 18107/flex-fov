@@ -1,5 +1,7 @@
 package mod.id107.flexfov;
 
+import org.lwjgl.opengl.Display;
+
 import mod.id107.flexfov.projection.Projection;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -14,6 +16,13 @@ public class FlexFovEventHandler {
 			Minecraft mc = Minecraft.getMinecraft();
 			if (!mc.skipRenderWorld && mc.world != null) {
 				if (e.phase == TickEvent.Phase.START) {
+					//if screen resized recreate framebuffer
+					if (BufferManager.framebuffer == null ||
+							Math.min(Display.getWidth(), Display.getHeight()) !=
+							BufferManager.framebuffer.framebufferTextureWidth) {
+						BufferManager.deleteFramebuffer();
+						BufferManager.createFramebuffer();
+					}
 					Projection.getProjection().renderWorld(e.renderTickTime);
 				} else {
 					Projection.getProjection().saveRenderPass();
