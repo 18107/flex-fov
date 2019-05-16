@@ -1,0 +1,16 @@
+[
+{
+  "modid": "flexfov",
+  "name": "Flex FOV",
+  "description": "Allows for increasing the field of view past 180 degrees.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["18107"],
+  "credits": "shaunlebron",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
