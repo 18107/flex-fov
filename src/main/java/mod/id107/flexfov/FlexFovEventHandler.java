@@ -10,6 +10,10 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class FlexFovEventHandler {
 
+	public FlexFovEventHandler() {
+		Shader.createShaderProgram(Projection.getProjection());
+	}
+	
 	@SubscribeEvent
 	public void onRenderTickStart(TickEvent.RenderTickEvent e) {
 		if (Projection.active) {

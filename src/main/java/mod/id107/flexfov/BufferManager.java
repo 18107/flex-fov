@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import mod.id107.flexfov.projection.Projection;
 import net.minecraft.client.shader.Framebuffer;
 
 public class BufferManager {
@@ -23,9 +24,7 @@ public class BufferManager {
 	
 	public static void setupFrame() {
 		//if screen resized recreate framebuffer
-		if (framebuffer == null ||
-				Display.getWidth() != displayWidth ||
-				Display.getHeight() != displayHeight) {
+		if (Display.getWidth() != displayWidth || Display.getHeight() != displayHeight) {
 			deleteFramebuffer();
 			createFramebuffer();
 			displayWidth = Display.getWidth();

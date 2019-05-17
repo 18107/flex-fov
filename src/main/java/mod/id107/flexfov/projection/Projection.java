@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import mod.id107.flexfov.BufferManager;
 import mod.id107.flexfov.Reader;
+import mod.id107.flexfov.Shader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.shader.Framebuffer;
@@ -26,6 +27,8 @@ public abstract class Projection {
 		if (currentProjection >= projections.length) {
 			currentProjection = 0;
 		}
+		Shader.deleteShaderProgram();
+		Shader.createShaderProgram(projections[currentProjection]);
 		return projections[currentProjection];
 	}
 	
