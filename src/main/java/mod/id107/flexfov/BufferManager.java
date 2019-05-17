@@ -2,6 +2,7 @@ package mod.id107.flexfov;
 
 import java.nio.ByteBuffer;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
@@ -23,6 +24,10 @@ public class BufferManager {
 	private static int displayHeight;
 	
 	public static void setupFrame() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_NUMPAD5)) { //TODO remove
+			Shader.deleteShaderProgram();
+			Shader.createShaderProgram(Projection.getProjection());
+		}
 		//if screen resized recreate framebuffer
 		if (Display.getWidth() != displayWidth || Display.getHeight() != displayHeight) {
 			deleteFramebuffer();

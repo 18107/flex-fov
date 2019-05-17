@@ -43,6 +43,10 @@ public abstract class Projection {
 		renderPass = 0;
 	}
 	
+	public void onCameraSetup() {
+		
+	}
+	
 	public void saveRenderPass() {
 		Framebuffer defaultFramebuffer = Minecraft.getMinecraft().getFramebuffer();
 		Framebuffer targetFramebuffer = BufferManager.framebuffer;

@@ -33,7 +33,7 @@ public class FlexFovEventHandler {
 	@SubscribeEvent //TODO change event
 	public void cameraSetup(EntityViewRenderEvent.CameraSetup e) {
 		if (Projection.active) {
-			e.getPitch(); //TODO
+			Projection.getProjection().onCameraSetup(); //TODO
 		}
 	}
 	
