@@ -16,13 +16,7 @@ public class FlexFovEventHandler {
 			Minecraft mc = Minecraft.getMinecraft();
 			if (!mc.skipRenderWorld && mc.world != null) {
 				if (e.phase == TickEvent.Phase.START) {
-					//if screen resized recreate framebuffer
-					if (BufferManager.framebuffer == null ||
-							Math.min(Display.getWidth(), Display.getHeight()) !=
-							BufferManager.framebuffer.framebufferTextureWidth) {
-						BufferManager.deleteFramebuffer();
-						BufferManager.createFramebuffer();
-					}
+					BufferManager.setupFrame();
 					Projection.getProjection().renderWorld(e.renderTickTime);
 				} else {
 					Projection.getProjection().saveRenderPass();
@@ -35,7 +29,7 @@ public class FlexFovEventHandler {
 	@SubscribeEvent //TODO change event
 	public void cameraSetup(EntityViewRenderEvent.CameraSetup e) {
 		if (Projection.active) {
-			Log.info("Render pass " + Projection.getProjection().getRenderPass());
+			e.getPitch(); //TODO
 		}
 	}
 	

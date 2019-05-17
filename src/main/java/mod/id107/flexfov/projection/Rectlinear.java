@@ -13,4 +13,9 @@ public class Rectlinear extends Projection {
 	public String getFragmentShader() {
 		return Reader.read("flexfov:shaders/error.fs");
 	}
+	
+	@Override
+	public float getPassFOV(float fovIn) {
+		return fovIn;
+	}
 }

@@ -18,16 +18,11 @@ public class Equirectangular extends Projection {
 	
 	@Override
 	public void renderWorld(float partialTicks) {
-		for (renderPass = 0; renderPass < 5; renderPass++) {
+		for (renderPass = 0; renderPass < 0; renderPass++) { //FIXME 5, not 0
 			Minecraft mc = Minecraft.getMinecraft();
 			mc.mcProfiler.endStartSection("gameRenderer");
 			mc.entityRenderer.updateCameraAndRender(partialTicks, System.nanoTime()); //FIXME partialTicksPaused
 			saveRenderPass();
 		}
-	}
-	
-	@Override
-	public float getPassFOV(float fovIn) {
-		return 90f;
 	}
 }
