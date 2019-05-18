@@ -9,6 +9,7 @@ import mod.id107.flexfov.Log;
 import mod.id107.flexfov.Reader;
 import mod.id107.flexfov.Shader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 
 public class Equirectangular extends Projection {
 
@@ -19,36 +20,65 @@ public class Equirectangular extends Projection {
 	
 	@Override
 	public String getFragmentShader() {
-		return Reader.read("flexfov:shaders/equirectangular.fs"); //FIXME
+		return Reader.read("flexfov:shaders/equirectangular.fs");
 	}
 	
 	@Override
 	public void renderWorld(float partialTicks) {
-		for (renderPass = 0; renderPass < 5; renderPass++) { //FIXME 5, not 0
-			Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = Minecraft.getMinecraft();
+		Entity entity = mc.getRenderViewEntity();
+		
+		renderPass = 0;
+		mc.mcProfiler.endStartSection("gameRenderer");
+		mc.entityRenderer.updateCameraAndRender(partialTicks, System.nanoTime());
+		entity.rotationYaw += 90f;
+		entity.prevRotationYaw += 90f;
+		saveRenderPass();
+		
+		float yaw = entity.rotationYaw;
+		float prevYaw = entity.prevRotationYaw;
+		float pitch = entity.rotationPitch;
+		float prevPitch = entity.prevRotationPitch;
+		
+		for (renderPass = 1; renderPass < 5; renderPass++) {
 			mc.mcProfiler.endStartSection("gameRenderer");
-			mc.entityRenderer.updateCameraAndRender(partialTicks, System.nanoTime()); //FIXME partialTicksPaused
+			mc.entityRenderer.updateCameraAndRender(partialTicks, System.nanoTime());
+			entity.rotationYaw = yaw;
+			entity.prevRotationYaw = prevYaw;
+			entity.rotationPitch = pitch;
+			entity.prevRotationPitch = prevPitch;
 			saveRenderPass();
 		}
 	}
 	
 	@Override
 	public void onCameraSetup() {
+		Entity entity = Minecraft.getMinecraft().getRenderViewEntity();
 		switch (renderPass) {
 		case 0: //left
 			GL11.glRotatef(-90, 0, 1, 0);
+			entity.rotationYaw -= 90f;
+			entity.prevRotationYaw -= 90f;
 			break;
 		case 1: //right
 			GL11.glRotatef(90, 0, 1, 0);
+			entity.rotationYaw += 90f;
+			entity.prevRotationYaw += 90f;
 			break;
 		case 2: //top
 			GL11.glRotatef(-90, 1, 0, 0);
+			entity.rotationPitch -= 90f;
+			entity.prevRotationPitch -= 90f;
 			break;
 		case 3: //bottom
 			GL11.glRotatef(90, 1, 0, 0);
+			entity.rotationPitch += 90f;
+			entity.prevRotationPitch += 90f;
 			break;
 		case 4: //back
 			GL11.glRotatef(180, 0, 1, 0);
+			entity.rotationYaw += 180f;
+			entity.prevRotationYaw += 180f;
 			break;
 		//case 5 front
 		}
@@ -58,7 +88,6 @@ public class Equirectangular extends Projection {
 	public void runShader() {
 		GL20.glUseProgram(Shader.getShaderProgram());
 		
-		//TODO uniform variables
 		int aaUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "antialiasing");
 		GL20.glUniform1i(aaUniform, 1);
 		int pixelOffsetUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "pixelOffset[0]");

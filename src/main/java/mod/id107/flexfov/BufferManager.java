@@ -48,7 +48,6 @@ public class BufferManager {
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, framebufferTextures[i]);
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, width,
 					0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer)null);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, framebufferTextures[i]); //FIXME remove this line if possible
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
@@ -68,7 +67,7 @@ public class BufferManager {
 			
 			fov = 90f;
 		} else {
-			//tall screen //TODO correct FOV
+			//tall screen
 			minX = 0;
 			maxX = 1;
 			

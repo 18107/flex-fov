@@ -1,6 +1,7 @@
 package mod.id107.flexfov;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 
 import mod.id107.flexfov.projection.Projection;
 import net.minecraft.client.Minecraft;
@@ -30,10 +31,11 @@ public class FlexFovEventHandler {
 		}
 	}
 	
-	@SubscribeEvent //TODO change event
+	@SubscribeEvent
 	public void cameraSetup(EntityViewRenderEvent.CameraSetup e) {
 		if (Projection.active) {
-			Projection.getProjection().onCameraSetup(); //TODO
+			GL11.glTranslatef(0, 0, -0.05f);
+			Projection.getProjection().onCameraSetup();
 		}
 	}
 	
