@@ -117,6 +117,8 @@ public class Equirectangular extends Projection {
 	
 	@Override
 	public void runShader() {
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		int lightmap = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
 		GL20.glUseProgram(Shader.getShaderProgram());
 		
 		int aaUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "antialiasing");
@@ -156,7 +158,6 @@ public class Equirectangular extends Projection {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0+i);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, BufferManager.framebufferTextures[i]);
 		}
-		//GL11.glBindTexture(GL11.GL_TEXTURE_2D, BufferManager.framebufferTextures[0]);
 		GL11.glBegin(GL11.GL_QUADS);
 		{
 			GL11.glTexCoord2f(0, 0);
@@ -169,7 +170,6 @@ public class Equirectangular extends Projection {
 			GL11.glVertex2f(-1, 1);
 		}
 		GL11.glEnd();
-		//GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		for (int i = BufferManager.framebufferTextures.length-1; i >= 0; i--) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0+i);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
@@ -179,6 +179,10 @@ public class Equirectangular extends Projection {
 		GL11.glPopMatrix();
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPopMatrix();
+		
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, lightmap);
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		
 		GL20.glUseProgram(0);
 	}
