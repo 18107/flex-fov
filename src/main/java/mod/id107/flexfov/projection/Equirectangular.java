@@ -9,7 +9,9 @@ import mod.id107.flexfov.Log;
 import mod.id107.flexfov.Reader;
 import mod.id107.flexfov.Shader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.client.event.GuiScreenEvent;
 
 public class Equirectangular extends Projection {
 
@@ -27,6 +29,15 @@ public class Equirectangular extends Projection {
 	public void renderWorld(float partialTicks) {
 		Minecraft mc = Minecraft.getMinecraft();
 		Entity entity = mc.getRenderViewEntity();
+		
+		//Render only 1 gui
+		boolean hideGui = mc.gameSettings.hideGUI;
+		boolean pauseOnLostFocus = mc.gameSettings.pauseOnLostFocus;
+		GuiScreen currentScreen = mc.currentScreen;
+		
+		mc.gameSettings.hideGUI = true;
+		mc.gameSettings.pauseOnLostFocus = false;
+		mc.currentScreen = null;
 		
 		renderPass = 0;
 		mc.mcProfiler.endStartSection("gameRenderer");
@@ -49,6 +60,10 @@ public class Equirectangular extends Projection {
 			entity.prevRotationPitch = prevPitch;
 			saveRenderPass();
 		}
+		
+		mc.gameSettings.hideGUI = hideGui;
+		mc.gameSettings.pauseOnLostFocus = pauseOnLostFocus;
+		mc.currentScreen = currentScreen;
 	}
 	
 	@Override
@@ -81,6 +96,13 @@ public class Equirectangular extends Projection {
 			entity.prevRotationYaw += 180f;
 			break;
 		//case 5 front
+		}
+	}
+	
+	@Override
+	public void onDrawGui(GuiScreenEvent.DrawScreenEvent.Pre e) {
+		if (Minecraft.getMinecraft().world != null && getRenderPass() != 5) {
+			e.setCanceled(true);
 		}
 	}
 	

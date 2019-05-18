@@ -5,7 +5,9 @@ import org.lwjgl.opengl.GL11;
 
 import mod.id107.flexfov.projection.Projection;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -28,6 +30,13 @@ public class FlexFovEventHandler {
 					Projection.getProjection().runShader();
 				}
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void drawScreen(GuiScreenEvent.DrawScreenEvent.Pre e) {
+		if (Projection.active) {
+			Projection.getProjection().onDrawGui(e);
 		}
 	}
 	

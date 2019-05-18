@@ -8,6 +8,7 @@ import mod.id107.flexfov.Shader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.shader.Framebuffer;
+import net.minecraftforge.client.event.GuiScreenEvent;
 
 public abstract class Projection {
 	
@@ -44,6 +45,10 @@ public abstract class Projection {
 	}
 	
 	public void onCameraSetup() {
+		
+	}
+	
+	public void onDrawGui(GuiScreenEvent.DrawScreenEvent.Pre e) {
 		
 	}
 	
