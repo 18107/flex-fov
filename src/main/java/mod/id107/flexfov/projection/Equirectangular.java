@@ -1,5 +1,6 @@
 package mod.id107.flexfov.projection;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -10,10 +11,17 @@ import mod.id107.flexfov.Reader;
 import mod.id107.flexfov.Shader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 public class Equirectangular extends Projection {
+	
+	private Minecraft mc = Minecraft.getMinecraft();
+	private boolean hideGui;
+	private boolean pauseOnLostFocus;
+	private GuiScreen currentScreen;
 
 	@Override
 	public String getName() {
@@ -27,13 +35,12 @@ public class Equirectangular extends Projection {
 	
 	@Override
 	public void renderWorld(float partialTicks) {
-		Minecraft mc = Minecraft.getMinecraft();
 		Entity entity = mc.getRenderViewEntity();
 		
 		//Render only 1 gui
-		boolean hideGui = mc.gameSettings.hideGUI;
-		boolean pauseOnLostFocus = mc.gameSettings.pauseOnLostFocus;
-		GuiScreen currentScreen = mc.currentScreen;
+		hideGui = mc.gameSettings.hideGUI;
+		pauseOnLostFocus = mc.gameSettings.pauseOnLostFocus;
+		currentScreen = mc.currentScreen;
 		
 		mc.gameSettings.hideGUI = true;
 		mc.gameSettings.pauseOnLostFocus = false;
@@ -61,14 +68,16 @@ public class Equirectangular extends Projection {
 			saveRenderPass();
 		}
 		
-		mc.gameSettings.hideGUI = hideGui;
-		mc.gameSettings.pauseOnLostFocus = pauseOnLostFocus;
-		mc.currentScreen = currentScreen;
+		if (!fullscreenGui) {
+			mc.gameSettings.hideGUI = hideGui;
+			mc.gameSettings.pauseOnLostFocus = pauseOnLostFocus;
+			mc.currentScreen = currentScreen;
+		}
 	}
 	
 	@Override
 	public void onCameraSetup() {
-		Entity entity = Minecraft.getMinecraft().getRenderViewEntity();
+		Entity entity = mc.getRenderViewEntity();
 		switch (renderPass) {
 		case 0: //left
 			GL11.glRotatef(-90, 0, 1, 0);
@@ -101,7 +110,7 @@ public class Equirectangular extends Projection {
 	
 	@Override
 	public void onDrawGui(GuiScreenEvent.DrawScreenEvent.Pre e) {
-		if (Minecraft.getMinecraft().world != null && getRenderPass() != 5) {
+		if (mc.world != null && getRenderPass() != 5) {
 			e.setCanceled(true);
 		}
 	}
@@ -172,5 +181,30 @@ public class Equirectangular extends Projection {
 		GL11.glPopMatrix();
 		
 		GL20.glUseProgram(0);
+	}
+	
+	@Override
+	public void drawOverlay(float partialTicks) {
+		if (fullscreenGui) {
+			mc.gameSettings.hideGUI = hideGui;
+			mc.gameSettings.pauseOnLostFocus = pauseOnLostFocus;
+			mc.currentScreen = currentScreen;
+			
+			final ScaledResolution scaledresolution = new ScaledResolution(this.mc);
+			int i1 = scaledresolution.getScaledWidth();
+            int j1 = scaledresolution.getScaledHeight();
+			GlStateManager.alphaFunc(516, 0.1F);
+            mc.entityRenderer.setupOverlayRendering();
+            mc.entityRenderer.renderItemActivation(i1, j1, partialTicks);
+            this.mc.ingameGUI.renderGameOverlay(partialTicks);
+            
+            if (mc.currentScreen != null) {
+            	GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+            	
+	            final int k1 = Mouse.getX() * i1 / mc.displayWidth;
+	            final int l1 = j1 - Mouse.getY() * j1 / mc.displayHeight - 1;
+	            net.minecraftforge.client.ForgeHooksClient.drawScreen(mc.currentScreen, k1, l1, mc.getTickLength());
+            }
+		}
 	}
 }

@@ -14,6 +14,7 @@ public abstract class Projection {
 	
 	public static boolean active = true;
 	protected static int renderPass;
+	public static boolean fullscreenGui = true;
 	
 	//Put all projections here
 	private static final Projection[] projections = new Projection[] {new Equirectangular(), new Rectlinear()};
@@ -121,6 +122,10 @@ public abstract class Projection {
 		GL11.glPopMatrix();
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPopMatrix();
+	}
+	
+	public void drawOverlay(float partialTicks) {
+		
 	}
 	
 	public float getPassFOV(float fovIn) {

@@ -22,12 +22,14 @@ public class FlexFovEventHandler {
 		if (Projection.active) {
 			Minecraft mc = Minecraft.getMinecraft();
 			if (!mc.skipRenderWorld && mc.world != null) {
+				Projection projection = Projection.getProjection();
 				if (e.phase == TickEvent.Phase.START) {
 					BufferManager.setupFrame();
-					Projection.getProjection().renderWorld(e.renderTickTime);
+					projection.renderWorld(e.renderTickTime);
 				} else {
-					Projection.getProjection().saveRenderPass();
-					Projection.getProjection().runShader();
+					projection.saveRenderPass();
+					projection.runShader();
+					projection.drawOverlay(e.renderTickTime);
 				}
 			}
 		}

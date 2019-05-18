@@ -11,13 +11,19 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "1.0.0"
+version = "1.0.1"
 group = "mod.id107.flexfov" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "flexfov"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
+}
+
+jar {
+    manifest {
+        attributes 'FMLAT': 'flexfov_at.cfg'
+    }
 }
 
 minecraft {
