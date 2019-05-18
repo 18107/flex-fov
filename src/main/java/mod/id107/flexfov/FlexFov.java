@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
-@Mod(modid = FlexFov.MOD_ID, name = FlexFov.MOD_NAME, version = FlexFov.MOD_VERSION, useMetadata = true)
+@Mod(modid = FlexFov.MOD_ID, name = FlexFov.MOD_NAME, version = FlexFov.MOD_VERSION, useMetadata = true, acceptableRemoteVersions = "*")
 public class FlexFov {
 
 	public static final String MOD_ID = "flexfov";
@@ -14,9 +14,6 @@ public class FlexFov {
     public static final String MOD_VERSION = "1.0.1";
     
     public static final String RESOURCE_PREFIX = MOD_ID.toLowerCase() + ':';
-    
-    @Mod.Instance
-    public static FlexFov instance;// TODO verify needed
     
     @EventHandler
     public void init(FMLInitializationEvent event) {

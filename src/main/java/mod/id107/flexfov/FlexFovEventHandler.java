@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -17,7 +18,7 @@ public class FlexFovEventHandler {
 		Shader.createShaderProgram(Projection.getProjection());
 	}
 	
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH) //render before other overlays
 	public void onRenderTickStart(TickEvent.RenderTickEvent e) {
 		if (Projection.active) {
 			Minecraft mc = Minecraft.getMinecraft();
