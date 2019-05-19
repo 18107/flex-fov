@@ -1,5 +1,6 @@
 package mod.id107.flexfov.projection;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import mod.id107.flexfov.BufferManager;
@@ -11,14 +12,16 @@ import net.minecraft.client.shader.Framebuffer;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 public abstract class Projection {
-	
+
+	protected Minecraft mc = Minecraft.getMinecraft();
 	public static boolean active = true;
 	protected static int renderPass;
 	public static boolean fullscreenGui = true;
+	public static float fov = 360f;
 	
 	//Put all projections here
-	private static final Projection[] projections = new Projection[] {new Equirectangular(), new Rectlinear()};
-	private static int currentProjection = 0;
+	private static final Projection[] projections = new Projection[] {new Rectlinear(), new Equirectangular()};
+	private static int currentProjection = 1; //FIXME
 	
 	public static Projection getProjection() {
 		return projections[currentProjection];
@@ -94,34 +97,7 @@ public abstract class Projection {
 	}
 	
 	public void runShader() {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
-		GL11.glOrtho(-1, 1, -1, 1, -1, 1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
 		
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, BufferManager.framebufferTextures[0]);
-		GL11.glBegin(GL11.GL_QUADS);
-		{
-			GL11.glTexCoord2f(0, 0);
-			GL11.glVertex2f(-1, -1);
-			GL11.glTexCoord2f(1, 0);
-			GL11.glVertex2f(1, -1);
-			GL11.glTexCoord2f(1, 1);
-			GL11.glVertex2f(1, 1);
-			GL11.glTexCoord2f(0, 1);
-			GL11.glVertex2f(-1, 1);
-		}
-		GL11.glEnd();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glPopMatrix();
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glPopMatrix();
 	}
 	
 	public void drawOverlay(float partialTicks) {

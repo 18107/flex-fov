@@ -18,9 +18,6 @@ public class Rectlinear extends Projection {
 	public void saveRenderPass() {}
 	
 	@Override
-	public void runShader() {}
-	
-	@Override
 	public float getPassFOV(float fovIn) {
 		return fovIn;
 	}
