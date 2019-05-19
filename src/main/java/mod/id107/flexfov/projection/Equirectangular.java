@@ -1,5 +1,8 @@
 package mod.id107.flexfov.projection;
 
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -21,6 +24,7 @@ public class Equirectangular extends Projection {
 	private boolean hideGui;
 	private boolean pauseOnLostFocus;
 	private GuiScreen currentScreen;
+	private FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
 
 	@Override
 	public String getName() {
@@ -60,7 +64,10 @@ public class Equirectangular extends Projection {
 	
 	@Override
 	public void onCameraSetup() {
-		//TODO get matrix
+		//fix screen tearing
+		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buffer);
+		GL11.glLoadIdentity();
+		
 		switch (renderPass) {
 		case 0: //left
 			GL11.glRotatef(-90, 0, 1, 0);
@@ -79,6 +86,10 @@ public class Equirectangular extends Projection {
 			break;
 		//case 5 front
 		}
+		
+		//fix screen tearing
+		GL11.glMultMatrix(buffer);
+		
 		//update chunk culling
 		mc.renderGlobal.displayListEntitiesDirty = true;
 	}

@@ -46,7 +46,6 @@ public class FlexFovEventHandler {
 	@SubscribeEvent
 	public void cameraSetup(EntityViewRenderEvent.CameraSetup e) {
 		if (Projection.active) {
-			GL11.glTranslatef(0, 0, -0.05f);
 			Projection.getProjection().onCameraSetup();
 		}
 	}
