@@ -15,7 +15,19 @@ public class Rectlinear extends Projection {
 	}
 	
 	@Override
+	public void renderWorld(float partialTicks) {}
+	
+	@Override
+	public void onCameraSetup() {}
+	
+	@Override
 	public void saveRenderPass() {}
+	
+	@Override
+	public void runShader() {}
+	
+	@Override
+	public void drawOverlay(float partialTicks) {}
 	
 	@Override
 	public float getPassFOV(float fovIn) {

@@ -55,23 +55,21 @@ public class BufferManager {
 		}
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		
+		float aspectRatio = Display.getWidth()/(float)Display.getHeight();
+		
 		if (Display.getWidth() >= Display.getHeight()) {
 			//wide screen
 			minY = 0;
 			maxY = 1;
 			
-			float aspectRatio = Display.getHeight()/(float)Display.getWidth();
-			
-			minX = 0.5f - 0.5f*aspectRatio;
-			maxX = 0.5f + 0.5f*aspectRatio;
+			minX = 0.5f - 0.5f/aspectRatio;
+			maxX = 0.5f + 0.5f/aspectRatio;
 			
 			fov = 90f;
 		} else {
 			//tall screen
 			minX = 0;
 			maxX = 1;
-			
-			float aspectRatio = Display.getWidth()/(float)Display.getHeight();
 			
 			minY = 0.5f - 0.5f*aspectRatio;
 			maxY = 0.5f + 0.5f*aspectRatio;
