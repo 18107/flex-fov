@@ -29,9 +29,9 @@ public abstract class Projection {
 	public static boolean fullscreenGui = true;
 	public static float fov = 360f;
 	protected FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
-	protected boolean hideGui;
-	protected boolean pauseOnLostFocus;
-	protected GuiScreen currentScreen;
+	protected static boolean hideGui = false;
+	protected static boolean pauseOnLostFocus;
+	protected static GuiScreen currentScreen;
 	
 	private static Projection currentProjection = new Flex();
 	
@@ -58,24 +58,29 @@ public abstract class Projection {
 		pauseOnLostFocus = mc.gameSettings.pauseOnLostFocus;
 		currentScreen = mc.currentScreen;
 
-		mc.gameSettings.hideGUI = true;
 		mc.gameSettings.pauseOnLostFocus = false;
 		mc.currentScreen = null;
 
 		for (renderPass = 0; renderPass < 5; renderPass++) {
 			mc.mcProfiler.endStartSection("gameRenderer");
 			mc.entityRenderer.updateCameraAndRender(partialTicks, System.nanoTime());
+			mc.gameSettings.hideGUI = hideGui;
 			saveRenderPass();
 		}
 
 		if (!fullscreenGui) {
-			mc.gameSettings.hideGUI = hideGui;
 			mc.gameSettings.pauseOnLostFocus = pauseOnLostFocus;
 			mc.currentScreen = currentScreen;
 		}
 	}
 	
 	public void onCameraSetup() {
+		//fix multiple guis
+		//this needs to be called after EntityRenderer.isDrawBlockOutline()
+		if (fullscreenGui || renderPass != 5) {
+			Minecraft.getMinecraft().gameSettings.hideGUI = true;
+		}
+		
 		//fix screen tearing
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, matrixBuffer);
 		GL11.glLoadIdentity();

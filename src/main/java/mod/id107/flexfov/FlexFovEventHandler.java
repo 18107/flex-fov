@@ -47,11 +47,11 @@ public class FlexFovEventHandler {
 				Projection projection = Projection.getProjection();
 				if (e.phase == TickEvent.Phase.START) {
 					BufferManager.setupFrame();
-					projection.renderWorld(e.renderTickTime);
+					projection.renderWorld(mc.isGamePaused() ? mc.renderPartialTicksPaused : e.renderTickTime);
 				} else {
 					projection.saveRenderPass();
 					projection.runShader();
-					projection.drawOverlay(e.renderTickTime);
+					projection.drawOverlay(mc.isGamePaused() ? mc.renderPartialTicksPaused : e.renderTickTime);
 				}
 			}
 		}
