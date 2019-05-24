@@ -25,15 +25,15 @@ public class SettingsGui extends GuiScreen {
 	@Override
 	public void initGui() {
 		GuiButton button = new GuiButton(18100, width / 2 - 190, height / 6 - 12, 120, 20, "Off");
-		if (currentGui instanceof StandardGui) {
-			button.enabled = false;
-		}
+		if (currentGui instanceof StandardGui) button.enabled = false;
 		buttonList.add(button);
 		
 		button = new GuiButton(18101, width / 2 - 60, height / 6 - 12, 120, 20, "Simple");
-		if (currentGui instanceof SimpleGui) {
-			button.enabled = false;
-		}
+		if (currentGui instanceof SimpleGui) button.enabled = false;
+		buttonList.add(button);
+		
+		button = new GuiButton(18102, width / 2 + 70, height / 6 - 12, 120, 20, "Advanced");
+		if (currentGui instanceof AdvancedGui) button.enabled = false;
 		buttonList.add(button);
 		
 		buttonList.add(new GuiButton(200, width / 2 - 100, height / 6 + 168, I18n.format("gui.done")));
@@ -51,6 +51,10 @@ public class SettingsGui extends GuiScreen {
 				break;
 			case 18101: //Simple
 				currentGui = new SimpleGui();
+				mc.displayGuiScreen(new SettingsGui(parentGuiScreen));
+				break;
+			case 18102: //Advanced
+				currentGui = new AdvancedGui();
 				mc.displayGuiScreen(new SettingsGui(parentGuiScreen));
 				break;
 			case 200: //Done
