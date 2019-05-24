@@ -7,8 +7,8 @@
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["18107"],
-  "credits": "shaunlebron",
+  "authorList": ["18107", "Khonkhortisan", "Shaunlebron"],
+  "credits": "",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

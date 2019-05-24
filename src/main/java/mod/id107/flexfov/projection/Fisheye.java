@@ -4,16 +4,16 @@ import mod.id107.flexfov.Reader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 
-public class Hammer extends Projection {
+public class Fisheye extends Projection {
 
 	@Override
 	public String getName() {
-		return "Hammer";
+		return "Fisheye";
 	}
 	
 	@Override
 	public String getFragmentShader() {
-		return Reader.read("flexfov:shaders/hammer.fs");
+		return Reader.read("flexfov:shaders/fisheye.fs");
 	}
 	
 	@Override

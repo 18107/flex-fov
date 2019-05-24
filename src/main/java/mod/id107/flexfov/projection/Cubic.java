@@ -4,16 +4,16 @@ import mod.id107.flexfov.Reader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 
-public class Hammer extends Projection {
+public class Cubic extends Projection {
 
 	@Override
 	public String getName() {
-		return "Hammer";
+		return "Cubic";
 	}
 	
 	@Override
 	public String getFragmentShader() {
-		return Reader.read("flexfov:shaders/hammer.fs");
+		return Reader.read("flexfov:shaders/cubic.fs");
 	}
 	
 	@Override

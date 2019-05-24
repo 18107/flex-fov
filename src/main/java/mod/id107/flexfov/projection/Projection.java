@@ -28,6 +28,7 @@ public abstract class Projection {
 	protected static int renderPass;
 	public static boolean fullscreenGui = true;
 	public static float fov = 360f;
+	protected static boolean skyBackground = true;
 	protected FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 	protected static boolean hideGui = false;
 	protected static boolean pauseOnLostFocus;
@@ -180,7 +181,12 @@ public abstract class Projection {
 		GL20.glUniform1f(fovyUniform, getProjection().getFinalFOV()*Display.getHeight()/Display.getWidth());
 
 		int backgroundUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "backgroundColor");
-		GL20.glUniform4f(backgroundUniform, 0, 0, 0, 1);
+		float backgroundColor[] = getBackgroundColor();
+		if (backgroundColor != null) {
+			GL20.glUniform4f(backgroundUniform, backgroundColor[0], backgroundColor[1], backgroundColor[2], 1);
+		} else {
+			GL20.glUniform4f(backgroundUniform, 0, 0, 0, 1);
+		}
 
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -252,6 +258,10 @@ public abstract class Projection {
 				}
 			}
 		}
+	}
+	
+	public float[] getBackgroundColor() {
+		return null;
 	}
 	
 	public float getPassFOV(float fovIn) {
