@@ -16,7 +16,10 @@ public class Flex extends Projection {
 	
 	@Override
 	public float getPassFOV(float fovIn) {
-		float fov = getFinalFOV();
+		float fov = getFOV();
+		if (KEY_ZOOM.isKeyDown()) {
+			fov /= getZoom();
+		}
 		if (fov <= 90) {
 			if (fov == 0) {
 				fov = 0.0001f;

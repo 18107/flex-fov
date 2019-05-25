@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 public interface Settings {
 
-	public void  updateScreen();
+	public void updateScreen();
 
 	public void initGui(List<GuiButton> buttonList, int width, int height, FontRenderer fontRenderer);
 	

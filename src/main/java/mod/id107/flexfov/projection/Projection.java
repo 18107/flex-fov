@@ -3,6 +3,7 @@ package mod.id107.flexfov.projection;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -17,24 +18,33 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public abstract class Projection {
 
+	public static final KeyBinding KEY_ZOOM = new KeyBinding("Zoom", Keyboard.KEY_Z, "Flex FOV");
+	
 	//TODO reorganize
 	protected Minecraft mc = Minecraft.getMinecraft();
 	public static boolean active = true;
 	protected static int renderPass;
 	public static boolean fullscreenGui = true;
 	public static float fov = 360f;
-	protected static boolean skyBackground = true;
+	public static float zoom = 4f;
+	public static boolean skyBackground = true;
+	public static int antialiasing = 16;
+	public static float dist = 1;
+	public static int fisheyeType = 3;
+	public static boolean fisheyeFullFrame = false;
 	protected FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 	protected static boolean hideGui = false;
 	protected static boolean pauseOnLostFocus;
 	protected static GuiScreen currentScreen;
 	
-	private static Projection currentProjection = new Flex();
+	private static Projection currentProjection = new Rectlinear();
 	
 	public static Projection getProjection() {
 		return currentProjection;
@@ -158,9 +168,32 @@ public abstract class Projection {
 		GL20.glUseProgram(Shader.getShaderProgram());
 
 		int aaUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "antialiasing");
-		GL20.glUniform1i(aaUniform, 1);
-		int pixelOffsetUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "pixelOffset[0]");
-		GL20.glUniform2f(pixelOffsetUniform, 0, 0);
+		GL20.glUniform1i(aaUniform, getAntialiasing());
+		int pixelOffsetUniform;
+		if (getAntialiasing() == 16) {
+			float left = (-1f+0.25f)/mc.displayWidth;
+			float top = (-1f+0.25f)/mc.displayHeight;
+			float right = 0.5f/mc.displayWidth;
+			float down = 0.5f/mc.displayHeight;
+			for (int y = 0; y < 4; y++) {
+				for (int x = 0; x < 4; x++) {
+					pixelOffsetUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "pixelOffset[" + (y*4+x) + "]");
+					GL20.glUniform2f(pixelOffsetUniform, left + right*x, top + down*y);
+				}
+			}
+		} else if (getAntialiasing() == 4) {
+			pixelOffsetUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "pixelOffset[0]");
+			GL20.glUniform2f(pixelOffsetUniform, -0.5f/mc.displayWidth, -0.5f/mc.displayHeight);
+			pixelOffsetUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "pixelOffset[1]");
+			GL20.glUniform2f(pixelOffsetUniform, 0.5f/mc.displayWidth, -0.5f/mc.displayHeight);
+			pixelOffsetUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "pixelOffset[2]");
+			GL20.glUniform2f(pixelOffsetUniform, -0.5f/mc.displayWidth, 0.5f/mc.displayHeight);
+			pixelOffsetUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "pixelOffset[3]");
+			GL20.glUniform2f(pixelOffsetUniform, 0.5f/mc.displayWidth, 0.5f/mc.displayHeight);
+		} else { //if getAntialiasing() == 1
+			pixelOffsetUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "pixelOffset[0]");
+			GL20.glUniform2f(pixelOffsetUniform, 0, 0);
+		}
 
 		int texFrontUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "texFront");
 		GL20.glUniform1i(texFrontUniform, 5);
@@ -175,10 +208,20 @@ public abstract class Projection {
 		int texBottomUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "texBottom");
 		GL20.glUniform1i(texBottomUniform, 3);
 
+		float fovx = getProjection().getFOV();
+		if (KEY_ZOOM.isKeyDown()) {
+			fovx /= getZoom();
+		}
 		int fovxUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "fovx");
-		GL20.glUniform1f(fovxUniform, getProjection().getFinalFOV());
+		GL20.glUniform1f(fovxUniform, fovx);
 		int fovyUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "fovy");
-		GL20.glUniform1f(fovyUniform, getProjection().getFinalFOV()*Display.getHeight()/Display.getWidth());
+		GL20.glUniform1f(fovyUniform, fovx*Display.getHeight()/Display.getWidth());
+		int distUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "dist");
+		GL20.glUniform1f(distUniform, getDist());
+		int fisheyeTypeUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "fisheyeType");
+		GL20.glUniform1i(fisheyeTypeUniform, getFisheyeType());
+		int fullFrameUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "fullFrame");
+		GL20.glUniform1i(fullFrameUniform, getFisheyeFullFrame()?1:0);
 
 		int backgroundUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "backgroundColor");
 		float backgroundColor[] = getBackgroundColor();
@@ -260,16 +303,36 @@ public abstract class Projection {
 		}
 	}
 	
+	public int getAntialiasing() {
+		return antialiasing;
+	}
+	
 	public float[] getBackgroundColor() {
 		return null;
+	}
+	
+	public int getFisheyeType() {
+		return fisheyeType;
+	}
+	
+	public boolean getFisheyeFullFrame() {
+		return fisheyeFullFrame;
+	}
+	
+	public float getDist() {
+		return dist;
 	}
 	
 	public float getPassFOV(float fovIn) {
 		return BufferManager.getFOV();
 	}
 	
-	public float getFinalFOV() {
+	public float getFOV() {
 		return fov;
+	}
+	
+	public float getZoom() {
+		return zoom;
 	}
 	
 	public static int getRenderPass() {
