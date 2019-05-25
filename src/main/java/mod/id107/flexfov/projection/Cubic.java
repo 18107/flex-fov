@@ -5,11 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 
 public class Cubic extends Projection {
-
-	@Override
-	public String getName() {
-		return "Cubic";
-	}
 	
 	@Override
 	public String getFragmentShader() {

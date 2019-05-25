@@ -5,11 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 
 public class Fisheye extends Projection {
-
-	@Override
-	public String getName() {
-		return "Fisheye";
-	}
 	
 	@Override
 	public String getFragmentShader() {

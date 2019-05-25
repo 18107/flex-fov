@@ -5,11 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 
 public class Hammer extends Projection {
-
-	@Override
-	public String getName() {
-		return "Hammer";
-	}
 	
 	@Override
 	public String getFragmentShader() {

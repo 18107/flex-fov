@@ -54,8 +54,6 @@ public abstract class Projection {
 		Shader.createShaderProgram(projection);
 	}
 	
-	public abstract String getName();
-	
 	public String getVertexShader() {
 		return Reader.read("flexfov:shaders/quad.vs");
 	}

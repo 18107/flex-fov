@@ -13,7 +13,7 @@ public class FlexFov {
 
 	public static final String MOD_ID = "flexfov";
 	public static final String MOD_NAME = "Flex FOV";
-    public static final String MOD_VERSION = "1.0.2";
+    public static final String MOD_VERSION = "1.0.3";
     
     public static final String RESOURCE_PREFIX = MOD_ID.toLowerCase() + ':';
     
