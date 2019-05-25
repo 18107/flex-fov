@@ -20,8 +20,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public abstract class Projection {
 

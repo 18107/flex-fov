@@ -1,16 +1,11 @@
 package mod.id107.flexfov;
 
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-
 import mod.id107.flexfov.gui.SettingsGui;
 import mod.id107.flexfov.projection.Projection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -35,7 +30,7 @@ public class FlexFovEventHandler {
 	public void actionPerformed(ActionPerformedEvent.Pre e) {
 		if (e.getGui() instanceof GuiOptions && e.getButton().id == 18107) {
 			e.getGui().mc.gameSettings.saveOptions();
-			e.getGui().mc.displayGuiScreen(new SettingsGui(e.getGui()));
+			e.getGui().mc.displayGuiScreen(SettingsGui.getGui(e.getGui()));
 		}
 	}
 	

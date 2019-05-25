@@ -1,27 +1,13 @@
 package mod.id107.flexfov.gui.advanced;
 
-import java.util.List;
-
 import mod.id107.flexfov.projection.Panini;
 import mod.id107.flexfov.projection.Projection;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
-public class PaniniGui implements Advanced {
+public class PaniniGui extends AdvancedGui {
 
-	@Override
-	public void initGui(List<GuiButton> buttonList, int width, int height) {
-		
+	public PaniniGui(GuiScreen guiScreenIn) {
+		super(guiScreenIn);
+		Projection.setProjection(new Panini());
 	}
-
-	@Override
-	public void actionPerformed(GuiButton guiButton, GuiScreen parentScreen) {
-		
-	}
-
-	@Override
-	public Projection getProjection() {
-		return new Panini();
-	}
-
 }

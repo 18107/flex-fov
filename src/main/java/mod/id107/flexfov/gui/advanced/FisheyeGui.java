@@ -1,27 +1,13 @@
 package mod.id107.flexfov.gui.advanced;
 
-import java.util.List;
-
 import mod.id107.flexfov.projection.Fisheye;
 import mod.id107.flexfov.projection.Projection;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
-public class FisheyeGui implements Advanced {
+public class FisheyeGui extends AdvancedGui {
 
-	@Override
-	public void initGui(List<GuiButton> buttonList, int width, int height) {
-		
+	public FisheyeGui(GuiScreen guiScreenIn) {
+		super(guiScreenIn);
+		Projection.setProjection(new Fisheye());
 	}
-
-	@Override
-	public void actionPerformed(GuiButton guiButton, GuiScreen parentScreen) {
-		
-	}
-
-	@Override
-	public Projection getProjection() {
-		return new Fisheye();
-	}
-
 }
