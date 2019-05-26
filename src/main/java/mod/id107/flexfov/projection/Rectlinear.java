@@ -19,7 +19,7 @@ public class Rectlinear extends Projection {
 	public void saveRenderPass() {}
 	
 	@Override
-	public void runShader() {}
+	public void runShader(float PartialTicks) {}
 	
 	@Override
 	public void drawOverlay(float partialTicks) {}

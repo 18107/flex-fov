@@ -23,4 +23,19 @@ public class Flex extends Projection {
 		}
 		return super.getPassFOV(fovIn);
 	}
+	
+	@Override
+	public boolean getFullscreenGui() {
+		return true;
+	}
+	
+	@Override
+	public int getAntialiasing() {
+		return 16;
+	}
+	
+	@Override
+	public boolean getRenderHand() {
+		return true;
+	}
 }

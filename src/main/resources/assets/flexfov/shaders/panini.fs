@@ -11,8 +11,6 @@ uniform sampler2D texRight;
 uniform sampler2D texTop;
 uniform sampler2D texBottom;
 
-uniform float dist;
-
 uniform int antialiasing;
 
 uniform vec2 pixelOffset[16];
@@ -73,7 +71,7 @@ void main(void) {
         vec2 coord = texcoord + pixelOffset[loop];
 
         //create ray
-        vec3 ray = panini_ray(coord, dist);
+        vec3 ray = panini_ray(coord, 1);
 
         //find which side to use
         if (abs(ray.x) > abs(ray.y)) {

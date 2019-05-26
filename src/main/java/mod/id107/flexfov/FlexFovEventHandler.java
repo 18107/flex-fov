@@ -1,5 +1,7 @@
 package mod.id107.flexfov;
 
+import org.lwjgl.opengl.GL11;
+
 import mod.id107.flexfov.gui.SettingsGui;
 import mod.id107.flexfov.projection.Projection;
 import net.minecraft.client.Minecraft;
@@ -14,6 +16,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class FlexFovEventHandler {
 
+	private static boolean renderHand;
+	
 	public FlexFovEventHandler() {
 		Shader.createShaderProgram(Projection.getProjection());
 	}
@@ -22,7 +26,7 @@ public class FlexFovEventHandler {
 	public void initGui(InitGuiEvent.Post e) {
 		if (e.getGui() instanceof GuiOptions) {
 			e.getButtonList().add(new GuiButton(18107, e.getGui().width / 2 - 155,
-					e.getGui().height / 6 + 12, 150, 20, SettingsGui.screenTitle));
+					e.getGui().height / 6 + 15, 150, 20, SettingsGui.screenTitle));
 		}
 	}
 	
@@ -41,12 +45,15 @@ public class FlexFovEventHandler {
 			if (!mc.skipRenderWorld && mc.world != null) {
 				Projection projection = Projection.getProjection();
 				if (e.phase == TickEvent.Phase.START) {
+					renderHand = mc.entityRenderer.renderHand;
+					mc.entityRenderer.renderHand = Projection.getProjection().getRenderHand();
 					BufferManager.setupFrame();
 					projection.renderWorld(mc.isGamePaused() ? mc.renderPartialTicksPaused : e.renderTickTime);
 				} else {
 					projection.saveRenderPass();
-					projection.runShader();
+					projection.runShader(mc.isGamePaused() ? mc.renderPartialTicksPaused : e.renderTickTime);
 					projection.drawOverlay(mc.isGamePaused() ? mc.renderPartialTicksPaused : e.renderTickTime);
+					mc.entityRenderer.renderHand = renderHand;
 				}
 			}
 		}
@@ -55,6 +62,7 @@ public class FlexFovEventHandler {
 	@SubscribeEvent
 	public void cameraSetup(EntityViewRenderEvent.CameraSetup e) {
 		if (Projection.active) {
+			GL11.glTranslatef(0, 0, -0.05f);
 			Projection.getProjection().onCameraSetup();
 		}
 	}

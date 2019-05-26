@@ -28,7 +28,7 @@ public class FlexGui extends SettingsGui {
 	public void initGui() {
 		super.initGui();
 		
-		FOVSlider = new Slider(new Responder(), 18103, width / 2 -180, height / 6 + 24, 360, 20, "FOV", 0f, 360f, Projection.fov, 1f, null);
+		FOVSlider = new Slider(new Responder(), 18103, width / 2 -180, height / 6 + 36, 360, 20, "FOV", 0f, 360f, Projection.fov, 1f, null);
 		buttonList.add(FOVSlider);
 		FOVTextField = new GuiTextField(18121, fontRenderer, width / 2 - 155, height / 6 + 72, 150, 20);
 		FOVTextField.setText(String.format("%s", Projection.getProjection().getFOV()));

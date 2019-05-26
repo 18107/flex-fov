@@ -29,14 +29,16 @@ public abstract class Projection {
 	protected Minecraft mc = Minecraft.getMinecraft();
 	public static boolean active = true;
 	protected static int renderPass;
+	
+	public static float fov = 180f;
 	public static boolean fullscreenGui = true;
-	public static float fov = 360f;
-	public static float zoom = 4f;
-	public static boolean skyBackground = true;
 	public static int antialiasing = 16;
-	public static float dist = 1;
+	public static boolean renderHand = true;
+	public static boolean skyBackground = true;
+	public static float zoom = 4f;
 	public static int fisheyeType = 3;
 	public static boolean fisheyeFullFrame = false;
+	
 	protected FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 	protected static boolean hideGui = false;
 	protected static boolean pauseOnLostFocus;
@@ -75,7 +77,7 @@ public abstract class Projection {
 			saveRenderPass();
 		}
 
-		if (!fullscreenGui) {
+		if (!getFullscreenGui()) {
 			mc.gameSettings.pauseOnLostFocus = pauseOnLostFocus;
 			mc.currentScreen = currentScreen;
 		}
@@ -84,7 +86,7 @@ public abstract class Projection {
 	public void onCameraSetup() {
 		//fix multiple guis
 		//this needs to be called after EntityRenderer.isDrawBlockOutline()
-		if (fullscreenGui || renderPass != 5) {
+		if (getFullscreenGui() || renderPass != 5) {
 			Minecraft.getMinecraft().gameSettings.hideGUI = true;
 		}
 		
@@ -158,7 +160,7 @@ public abstract class Projection {
 		defaultFramebuffer.bindFramebuffer(true);
 	}
 	
-	public void runShader() {
+	public void runShader(float partialTicks) {
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
 		int lightmap = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
 		GL20.glUseProgram(Shader.getShaderProgram());
@@ -212,8 +214,6 @@ public abstract class Projection {
 		GL20.glUniform1f(fovxUniform, fovx);
 		int fovyUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "fovy");
 		GL20.glUniform1f(fovyUniform, fovx*Display.getHeight()/Display.getWidth());
-		int distUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "dist");
-		GL20.glUniform1f(distUniform, getDist());
 		int fisheyeTypeUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "fisheyeType");
 		GL20.glUniform1i(fisheyeTypeUniform, getFisheyeType());
 		int fullFrameUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "fullFrame");
@@ -270,7 +270,7 @@ public abstract class Projection {
 	}
 	
 	public void drawOverlay(float partialTicks) {
-		if (fullscreenGui) {
+		if (getFullscreenGui()) {
 			mc.gameSettings.hideGUI = hideGui;
 			mc.gameSettings.pauseOnLostFocus = pauseOnLostFocus;
 			mc.currentScreen = currentScreen;
@@ -299,8 +299,16 @@ public abstract class Projection {
 		}
 	}
 	
+	public boolean getFullscreenGui() {
+		return fullscreenGui;
+	}
+	
 	public int getAntialiasing() {
 		return antialiasing;
+	}
+	
+	public boolean getRenderHand() {
+		return renderHand;
 	}
 	
 	public float[] getBackgroundColor() {
@@ -313,10 +321,6 @@ public abstract class Projection {
 	
 	public boolean getFisheyeFullFrame() {
 		return fisheyeFullFrame;
-	}
-	
-	public float getDist() {
-		return dist;
 	}
 	
 	public float getPassFOV(float fovIn) {
