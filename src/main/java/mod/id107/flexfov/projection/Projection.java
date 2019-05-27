@@ -36,8 +36,6 @@ public abstract class Projection {
 	public static boolean renderHand = true;
 	public static boolean skyBackground = true;
 	public static float zoom = 4f;
-	public static int fisheyeType = 3;
-	public static boolean fisheyeFullFrame = false;
 	
 	protected FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 	protected static boolean hideGui = false;
@@ -214,10 +212,6 @@ public abstract class Projection {
 		GL20.glUniform1f(fovxUniform, fovx);
 		int fovyUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "fovy");
 		GL20.glUniform1f(fovyUniform, fovx*Display.getHeight()/Display.getWidth());
-		int fisheyeTypeUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "fisheyeType");
-		GL20.glUniform1i(fisheyeTypeUniform, getFisheyeType());
-		int fullFrameUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "fullFrame");
-		GL20.glUniform1i(fullFrameUniform, getFisheyeFullFrame()?1:0);
 
 		int backgroundUniform = GL20.glGetUniformLocation(Shader.getShaderProgram(), "backgroundColor");
 		float backgroundColor[] = getBackgroundColor();
@@ -313,14 +307,6 @@ public abstract class Projection {
 	
 	public float[] getBackgroundColor() {
 		return null;
-	}
-	
-	public int getFisheyeType() {
-		return fisheyeType;
-	}
-	
-	public boolean getFisheyeFullFrame() {
-		return fisheyeFullFrame;
 	}
 	
 	public float getPassFOV(float fovIn) {
