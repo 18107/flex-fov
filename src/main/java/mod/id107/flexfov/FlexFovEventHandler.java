@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiOptions;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -72,5 +73,19 @@ public class FlexFovEventHandler {
 		if (Projection.active) {
 			e.setFOV(Projection.getProjection().getPassFOV(e.getFOV()));
 		}
+	}
+	
+	@Optional.Method(modid="replaymod")
+	@SubscribeEvent
+	public void replayModRenderPre(com.replaymod.render.events.ReplayRenderEvent.Pre e) {
+		Log.info("Disabling Flex FOV");
+		Projection.active = false;
+	}
+	
+	@Optional.Method(modid="replaymod")
+	@SubscribeEvent
+	public void replayModRenderPost(com.replaymod.render.events.ReplayRenderEvent.Post e) {
+		Log.info("Enabling Flex FOV");
+		Projection.active = true;
 	}
 }

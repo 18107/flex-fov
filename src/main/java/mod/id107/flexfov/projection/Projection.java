@@ -37,9 +37,8 @@ public abstract class Projection {
 	public static boolean skyBackground = true;
 	public static float zoom = 4f;
 	
-	protected FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+	protected static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 	protected static boolean hideGui = false;
-	protected static boolean pauseOnLostFocus;
 	protected static GuiScreen currentScreen;
 	
 	private static Projection currentProjection = new Rectlinear();
@@ -62,10 +61,8 @@ public abstract class Projection {
 	public void renderWorld(float partialTicks) {
 		//Render only 1 gui
 		hideGui = mc.gameSettings.hideGUI;
-		pauseOnLostFocus = mc.gameSettings.pauseOnLostFocus;
 		currentScreen = mc.currentScreen;
 
-		mc.gameSettings.pauseOnLostFocus = false;
 		mc.currentScreen = null;
 
 		for (renderPass = 0; renderPass < 5; renderPass++) {
@@ -76,7 +73,6 @@ public abstract class Projection {
 		}
 
 		if (!getFullscreenGui()) {
-			mc.gameSettings.pauseOnLostFocus = pauseOnLostFocus;
 			mc.currentScreen = currentScreen;
 		}
 	}
@@ -266,7 +262,6 @@ public abstract class Projection {
 	public void drawOverlay(float partialTicks) {
 		if (getFullscreenGui()) {
 			mc.gameSettings.hideGUI = hideGui;
-			mc.gameSettings.pauseOnLostFocus = pauseOnLostFocus;
 			mc.currentScreen = currentScreen;
 			
 			if (!hideGui) {
