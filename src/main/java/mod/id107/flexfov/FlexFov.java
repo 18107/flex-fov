@@ -8,12 +8,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
-@Mod(modid = FlexFov.MOD_ID, name = FlexFov.MOD_NAME, version = FlexFov.MOD_VERSION, useMetadata = true, acceptableRemoteVersions = "*")
+@Mod(modid = FlexFov.MOD_ID, name = FlexFov.MOD_NAME, version = FlexFov.MOD_VERSION, useMetadata = true, acceptedMinecraftVersions = "[1.12,1.12.2]", acceptableRemoteVersions = "*")
 public class FlexFov {
 
 	public static final String MOD_ID = "flexfov";
 	public static final String MOD_NAME = "Flex FOV";
-    public static final String MOD_VERSION = "1.0.3";
+    public static final String MOD_VERSION = "1.0.4";
     
     public static final String RESOURCE_PREFIX = MOD_ID.toLowerCase() + ':';
     
